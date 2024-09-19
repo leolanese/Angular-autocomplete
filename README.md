@@ -12,6 +12,7 @@ To demonstrate it, you should write a minimal webserver in Go or Node.js that se
 Please don't share this exercise or solution on any public profiles. Thanks!
 
 ---
+
 # Angular - Autocomplete
 
 ## Solution

@@ -28,3 +28,29 @@
       background-color: #f0f0f0;
     }
   }
+
+  .autocomplete-container {
+    position: relative;
+  }
+  .autocomplete-input {
+    width: 100%;
+    padding: 1em;
+    box-sizing: border-box;
+  }
+  .autocomplete-suggestions {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border: .1em solid #ccc;
+    border-top: none;
+    max-height: 10em;
+    overflow-y: auto;
+    background-color: #fff;
+  }
+  .autocomplete-suggestion {
+    padding: 1em;
+    cursor: pointer;
+  }
+  .autocomplete-suggestion:hover {
+    background-color: #dede;
+  }
