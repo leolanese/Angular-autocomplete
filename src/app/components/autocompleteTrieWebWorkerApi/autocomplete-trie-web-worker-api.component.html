@@ -1,0 +1,12 @@
+<main>
+  <h1>Autocomplete trie WW API</h1>
+
+  <input type="text" placeholder="Enter a word..." [(ngModel)]="input" (input)="handleInputChange($event)"
+    (keyup.enter)="handleAddWord()" />
+
+  <button (click)="handleAddWord()">Add Word</button>
+
+  <ul>
+    <li *ngFor="let suggestion of suggestions">{{ suggestion }}</li>
+  </ul>
+</main>

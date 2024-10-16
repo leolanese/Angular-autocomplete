@@ -1,12 +1,12 @@
-class TrieNode {
-  children: { [key: string]: TrieNode } = {};
+class TrieNode2 {
+  children: { [key: string]: TrieNode2 } = {};
 }
 
-class Trie {
-  private root: TrieNode;
+class Trie2 {
+  private root: TrieNode2;
 
   constructor() {
-    this.root = new TrieNode();
+    this.root = new TrieNode2();
   }
 
   insert(word: string): void {
@@ -14,14 +14,14 @@ class Trie {
 
     for (const char of word) {
       if (!currentNode.children[char]) {
-        currentNode.children[char] = new TrieNode();
+        currentNode.children[char] = new TrieNode2();
       }
       currentNode = currentNode.children[char];
     }
     currentNode.children['*'] = true; // End of word marker
   }
 
-  search(prefix: string): TrieNode | null {
+  search(prefix: string): TrieNode2 | null {
     let currentNode = this.root;
 
     for (const char of prefix) {
@@ -36,7 +36,7 @@ class Trie {
     return this.collectAllWords(node, prefix);
   }
 
-  private collectAllWords(node: TrieNode | null, word: string): string[] {
+  private collectAllWords(node: TrieNode2 | null, word: string): string[] {
     if (!node) return [];
     const words: string[] = [];
 
@@ -53,22 +53,22 @@ class Trie {
   }
 }
 
-const trieInstance = new Trie();
+const trie2 = new Trie2();
 
 onmessage = (event) => {
   const { action, words, prefix, word } = event.data;
 
   switch (action) {
     case 'initialize':
-      words.forEach((w: string) => trieInstance.insert(w));
+      words.forEach((w: string) => trie2.insert(w));
       break;
     case 'autocomplete':
-      const suggestions = trieInstance.autoComplete(prefix);
+      const suggestions = trie2.autoComplete(prefix);
       postMessage({ suggestions });
       break;
     case 'addWord':
       if (word) {
-        trieInstance.insert(word);
+        trie2.insert(word);
       }
       break;
   }
