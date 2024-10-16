@@ -31,45 +31,56 @@ class Trie2 {
     return currentNode;
   }
 
-  autoComplete(prefix: string): string[] {
+  autoComplete(prefix: string, limit: number = 10): string[] {
     const node = this.search(prefix);
-    return this.collectAllWords(node, prefix);
+    if (!node) return [];
+
+    const results: string[] = [];
+    this.collectAllWords(node, prefix.toLowerCase(), results, limit);
+    return results;
   }
 
-  private collectAllWords(node: TrieNode2 | null, word: string): string[] {
-    if (!node) return [];
-    const words: string[] = [];
+  private collectAllWords(node: TrieNode, word: string, results: string[], limit: number): void {
+    if (results.length >= limit) return;
 
     for (const key in node.children) {
-      const child = node.children[key];
       if (key === '*') {
-        words.push(word);
+        results.push(word);
+        if (results.length >= limit) break;
       } else {
-        words.push(...this.collectAllWords(child, word + key));
+        this.collectAllWords(node.children[key], word + key, results, limit);
+        if (results.length >= limit) break;
       }
     }
-
-    return words;
   }
+
 }
 
 const trie2 = new Trie2();
 
-onmessage = (event) => {
+self.onmessage = (event) => {
   const { action, words, prefix, word } = event.data;
 
   switch (action) {
     case 'initialize':
-      words.forEach((w: string) => trie2.insert(w));
-      break;
-    case 'autocomplete':
-      const suggestions = trie2.autoComplete(prefix);
-      postMessage({ suggestions });
-      break;
-    case 'addWord':
-      if (word) {
-        trie2.insert(word);
+      if (Array.isArray(words)) {
+        words.forEach((w: string) => trie2.insert(w));
+        postMessage({ status: 'initialized' });
       }
       break;
+    case 'autocomplete':
+      if (typeof prefix === 'string') {
+        const suggestions = trie2.autoComplete(prefix, 10);
+        postMessage({ suggestions });
+      }
+      break;
+    case 'addWord':
+      if (typeof word === 'string' && word.trim() !== '') {
+        trie2.insert(word.trim());
+        postMessage({ status: 'word_added' });
+      }
+      break;
+    default:
+      postMessage({ error: 'Unknown action' });
   }
 };

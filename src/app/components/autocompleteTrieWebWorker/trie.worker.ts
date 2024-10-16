@@ -18,7 +18,7 @@ class Trie {
       }
       currentNode = currentNode.children[char];
     }
-    currentNode.children['*'] = true; // End of word marker
+    currentNode.isEndOfWord = true; // End of word marker
   }
 
   search(prefix: string): TrieNode | null {
