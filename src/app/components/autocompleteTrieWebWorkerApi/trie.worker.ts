@@ -1,3 +1,8 @@
+// The worker script handles the "initialize," "autocomplete," and "addWord" actions 
+// by creating a trie data structure and providing autocomplete suggestions based on the prefix provided. 
+// The worker script is a standalone script that can be used in a web worker environment. 
+// the trie data structure is implemented using a class Trie2 and a class TrieNode2.
+
 class TrieNode2 {
   children: { [key: string]: TrieNode2 } = {};
 }
@@ -40,12 +45,17 @@ class Trie2 {
     return results;
   }
 
+  private capitaliseFirstLetter(word: string): string {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
+
   private collectAllWords(node: TrieNode2, word: string, results: string[], limit: number): void {
     if (results.length >= limit) return;
 
     for (const key in node.children) {
       if (key === '*') {
-        results.push(word);
+        // better UI experience by capitalising the first letter of the word
+        results.push(this.capitaliseFirstLetter(word));
         if (results.length >= limit) break;
       } else {
         this.collectAllWords(node.children[key], word + key, results, limit);
