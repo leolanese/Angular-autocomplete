@@ -1,8 +1,8 @@
 <main>
   <h1>Autocomplete Angular: Using Trie + WW + API</h1>
 
-  <input type="text" placeholder="Enter a word..." [(ngModel)]="input" (input)="handleInputChange($event)"
-    (keyup.enter)="handleAddWord()" />
+  <input type="text" placeholder="Enter city (Les Corts, Les Escales, etc)" [(ngModel)]="input"
+    (input)="onInputChange($event)" (keyup.enter)="handleAddWord()" />
 
   <button (click)="handleAddWord()">Add Word</button>
 

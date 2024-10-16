@@ -40,7 +40,7 @@ class Trie2 {
     return results;
   }
 
-  private collectAllWords(node: TrieNode, word: string, results: string[], limit: number): void {
+  private collectAllWords(node: TrieNode2, word: string, results: string[], limit: number): void {
     if (results.length >= limit) return;
 
     for (const key in node.children) {

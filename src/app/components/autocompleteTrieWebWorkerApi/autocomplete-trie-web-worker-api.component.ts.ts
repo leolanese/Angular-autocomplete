@@ -1,6 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {Component,OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {Subject,debounceTime} from 'rxjs';
 import {TrieService} from './trie.service';
 
 @Component({
@@ -15,34 +16,44 @@ import {TrieService} from './trie.service';
 export class AutocompleteTrieWebWorkerApiComponent implements OnInit {
   suggestions: string[] = [];
   input: string = '';
+  
+  private inputSubject = new Subject<string>();
 
   constructor(private trieService: TrieService) {}
 
+
   ngOnInit(): void {
-    // Initialize the trie with words from the HTTP request
-    this.trieService.initializeWords().subscribe({
-      next: () => this.updateSuggestions(),
-      error: (err) => console.error('Error initializing words:', err),
+    // Initialize the trie with world cities
+    this.trieService.initializeTrie().subscribe({
+      next: (msg) => console.log(msg),
+      error: (err) => console.error('Initialization error:', err),
+    });
+
+    // Set up debounce for input
+    this.inputSubject.pipe(debounceTime(300)).subscribe((prefix) => {
+      this.trieService.getSuggestions(prefix).subscribe({
+        next: (suggestions) => (this.suggestions = suggestions),
+        error: (err) => console.error('Error fetching suggestions:', err),
+      });
     });
   }
 
-  handleInputChange(event: Event): void {
+  onInputChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     this.input = inputElement.value;
-    this.updateSuggestions();
-  }
-
-  updateSuggestions(): void {
-    this.trieService.getSuggestions(this.input).then((suggestions) => {
-      this.suggestions = suggestions;
-    });
+    this.inputSubject.next(this.input);
   }
 
   handleAddWord(): void {
-    if (this.input) {
-      this.trieService.addWord(this.input);
-      this.input = '';
-      this.updateSuggestions();
-    }
+    if (this.input.trim() === '') return;
+
+    this.trieService.addWord(this.input.trim()).subscribe({
+      next: (status) => {
+        console.log(status);
+        this.input = '';
+        this.suggestions = [];
+      },
+      error: (err) => console.error('Error adding word:', err),
+    });
   }
 }
