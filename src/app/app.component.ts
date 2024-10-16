@@ -1,19 +1,19 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import {Component} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+// import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import {AutocompleteTrie} from './components/autocompleteTrie/autocompleteTrie.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
-    AutocompleteComponent
+    AutocompleteTrie
   ],
   template: `
     <div class="wrapper">
-        <app-autocomplete />
+        <autocomplete-trie />
     </div>
-   
   `,
   styleUrl: './app.component.scss'
 })

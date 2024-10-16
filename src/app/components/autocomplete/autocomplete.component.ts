@@ -1,12 +1,12 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { APIService } from '../../services/api.service';
-import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {CommonModule} from '@angular/common';
+import {Component,DestroyRef,inject,OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl,FormsModule,ReactiveFormsModule} from '@angular/forms';
+import {debounceTime,distinctUntilChanged,map,switchMap} from 'rxjs';
+import {APIService} from '../../services/api.service';
 
 @Component({
-  selector: 'app-autocomplete',
+  selector: 'autocomplete',
   standalone: true,
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule,
