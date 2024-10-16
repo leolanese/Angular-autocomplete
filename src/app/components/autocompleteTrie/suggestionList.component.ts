@@ -13,4 +13,8 @@ import {Component,Input} from '@angular/core';
 })
 export class SuggestionListComponent {
   @Input() suggestions: string[] = [];
+
+   trackByIndex(index: number, item: string): number {
+    return index;
+  }
 }

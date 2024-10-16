@@ -3,7 +3,7 @@ import {RouterOutlet} from '@angular/router';
 
 import {AutocompleteComponent} from "./components/autocomplete/autocomplete.component";
 import {AutocompleteTrie} from './components/autocompleteTrie/autocompleteTrie.component';
-import {AutocompleteTrieWebWorker} from "./components/autocompleteTrieWebWorker/autocompleteTrieWebWorker";
+import {AutocompleteTrieWebWorkerComponent} from './components/autocompleteTrieWebWorker/autocomplete-trie-web-worker.component.ts';
 
 @Component({
   selector: 'app-root',
@@ -12,14 +12,14 @@ import {AutocompleteTrieWebWorker} from "./components/autocompleteTrieWebWorker/
     RouterOutlet,
     AutocompleteTrie,
     AutocompleteComponent,
-    AutocompleteTrieWebWorker
+    AutocompleteTrieWebWorkerComponent
 ],
   template: `
     <div class="wrapper">
 
       <!-- <autocomplete /> -->
       <!-- <autocomplete-trie /> -->
-      <autocomplete-trie-web-worker />
+      <app-autocomplete-trie-web-worker />
 
       </div>
   `,

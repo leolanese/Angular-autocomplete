@@ -17,8 +17,19 @@ app.get('/world-cities.txt', (req, res) => {
     if (err) {
       res.status(500).send('Internal Server Error');
     } else {
-      // text/plain: The MIME type text/plain is the default MIME type for text content.
-      res.setHeader('Content-Type', 'text/plain');
+      res.setHeader('Content-Type', 'application/javascript'); // Set MIME type to JavaScript
+      res.status(200).send(data);
+    }
+  });
+});
+
+// Route to serve JavaScript worker file with the correct MIME type
+app.get('/trie.worker.js', (req, res) => {
+  fs.readFile('./trie.worker.js', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.setHeader('Content-Type', 'application/javascript'); // Set MIME type to JavaScript
       res.status(200).send(data);
     }
   });
