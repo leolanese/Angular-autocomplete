@@ -1,10 +1,10 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable,Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 class TrieNode {
-  children: { [key: string]: TrieNode } = {};
+  children: Map<string, TrieNode> = new Map();
   isEndOfWord: boolean = false;
 }
 
@@ -13,55 +13,53 @@ class TrieNode {
 })
 export class TrieService {
   private root: TrieNode = new TrieNode();
+  private worker: Worker|undefined;
+  private citiesLoaded$ = new Subject<boolean>();
 
   constructor(private http: HttpClient) {
     this.root = new TrieNode();
   }
 
-  // Fetch the world cities and insert them into the Trie
-  loadWorldCities(): Observable<void> {
+    // Load world cities and send to Web Worker
+  loadWorldCities(): Observable<boolean> {
     return this.http.get('http://localhost:3000/world-cities.txt', { responseType: 'text' }).pipe(
       map((data: string) => {
-        const cities = data.split('\n').map(city => city.trim());
-        cities.forEach(city => this.insert(city));
+        const cities = data.split('\n').map(city => city.trim()).filter(city => city);
+        if (this.worker) {
+          this.worker.postMessage({ type: 'LOAD_CITIES', payload: cities });
+        }
+        return true;
       })
     );
+  }
+
+  // Expose an observable to know when cities are loaded
+  citiesLoaded(): Observable<boolean> {
+    return this.citiesLoaded$.asObservable();
   }
 
   insert(word: string): void {
     let currentNode = this.root;
     for (const char of word) {
-      if (!currentNode.children[char]) {
-        currentNode.children[char] = new TrieNode();
+      if (!currentNode.children.has(char)) {
+        currentNode.children.set(char, new TrieNode());
       }
-      currentNode = currentNode.children[char]!;
+      currentNode = currentNode.children.get(char)!;
     }
     currentNode.isEndOfWord = true;
   }
 
-  search(word: string): TrieNode | null {
+  search(prefix: string): TrieNode | null {
     let currentNode = this.root;
-    for (const char of word) {
-      if (!currentNode.children[char]) {
+    for (const char of prefix) {
+      if (!currentNode.children.has(char)) {
         return null;
       }
-      currentNode = currentNode.children[char];
+      currentNode = currentNode.children.get(char)!;
     }
     return currentNode;
   }
 
-  collectAllWords(node: TrieNode = this.root, word: string = '', words: string[] = []): string[] {
-    for (const key in node.children) {
-      if (key === '*') {
-        words.push(word);
-      } else {
-        this.collectAllWords(node.children[key], word + key, words);
-      }
-    }
-    return words;
-  }
-
-  // Iterative collection of words with limit
   autoComplete(prefix: string, limit: number = 10): string[] {
     const suggestions: string[] = [];
     const node = this.search(prefix.toLowerCase());
@@ -77,7 +75,7 @@ export class TrieService {
         suggestions.push(word);
       }
 
-      for (const [char, childNode] of Object.entries(currentNode.children)) {
+      for (const [char, childNode] of currentNode.children) {
         stack.push({ node: childNode, word: word + char });
         if (suggestions.length >= limit) break;
       }
