@@ -1,17 +1,16 @@
-// The worker script handles the "initialize," "autocomplete," and "addWord" actions 
+// The worker script handles the "initialize," "autocomplete," "addWord" and "capitaliseWords" actions 
 // by creating a trie data structure and providing autocomplete suggestions based on the prefix provided. 
-// The worker script is a standalone script that can be used in a web worker environment. 
-// the trie data structure is implemented using a class Trie2 and a class TrieNode2.
+// the trie data structure is implemented using a class TrieApi and a class TrieNodeApi.
 
-class TrieNode2 {
-  children: { [key: string]: TrieNode2 } = {};
+class TrieNodeApi {
+  children: { [key: string]: TrieNodeApi } = {};
 }
 
-class Trie2 {
-  private root: TrieNode2;
+class TrieApi {
+  private root: TrieNodeApi;
 
   constructor() {
-    this.root = new TrieNode2();
+    this.root = new TrieNodeApi();
   }
 
   insert(word: string): void {
@@ -19,14 +18,14 @@ class Trie2 {
 
     for (const char of word) {
       if (!currentNode.children[char]) {
-        currentNode.children[char] = new TrieNode2();
+        currentNode.children[char] = new TrieNodeApi();
       }
       currentNode = currentNode.children[char];
     }
     currentNode.children['*'] = true; // End of word marker
   }
 
-  search(prefix: string): TrieNode2 | null {
+  search(prefix: string): TrieNodeApi | null {
     let currentNode = this.root;
 
     for (const char of prefix) {
@@ -49,7 +48,7 @@ class Trie2 {
     return word.charAt(0).toUpperCase() + word.slice(1);
   }
 
-  private collectAllWords(node: TrieNode2, word: string, results: string[], limit: number): void {
+  private collectAllWords(node: TrieNodeApi, word: string, results: string[], limit: number): void {
     if (results.length >= limit) return;
 
     for (const key in node.children) {
@@ -66,31 +65,38 @@ class Trie2 {
 
 }
 
-const trie2 = new Trie2();
+const trieApi = new TrieApi();
 
-self.onmessage = (event) => {
+interface TrieWorkerMessage {
+  action: 'initialize' | 'autocomplete' | 'addWord';
+  words?: string[];
+  prefix?: string;
+  word?: string;
+}
+
+self.onmessage = (event: MessageEvent<TrieWorkerMessage>) => {
   const { action, words, prefix, word } = event.data;
 
   switch (action) {
     case 'initialize':
       if (Array.isArray(words)) {
-        words.forEach((w: string) => trie2.insert(w));
-        postMessage({ status: 'initialized' });
+        words.forEach((w: string) => trieApi.insert(w));
+        postMessage({ status: 'initialised' });
       }
       break;
     case 'autocomplete':
       if (typeof prefix === 'string') {
-        const suggestions = trie2.autoComplete(prefix, 10);
+        const suggestions = trieApi.autoComplete(prefix, 10);
         postMessage({ suggestions });
       }
       break;
     case 'addWord':
       if (typeof word === 'string' && word.trim() !== '') {
-        trie2.insert(word.trim());
+        trieApi.insert(word.trim());
         postMessage({ status: 'word_added' });
       }
       break;
     default:
-      postMessage({ error: 'Unknown action' });
+      postMessage({ error: 'Unknown action :(' });
   }
 };

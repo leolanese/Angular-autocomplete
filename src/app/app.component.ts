@@ -3,7 +3,7 @@ import {RouterOutlet} from '@angular/router';
 
 import {AutocompleteComponent} from "./components/autocomplete/autocomplete.component";
 import {AutocompleteTrie} from './components/autocompleteTrie/autocompleteTrie.component';
-import {AutocompleteTrieWebWorkerApiComponent} from './components/autocompleteTrieWebWorkerApi/autocomplete-trie-web-worker-api.component.ts';
+import {AutocompleteTrieWebWorkerApiComponent} from './components/autocompleteTrieWebWorkerApi/autocomplete-trie-web-worker-api.component';
 
 @Component({
   selector: 'app-root',
