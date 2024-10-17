@@ -2,6 +2,7 @@ import {CommonModule} from '@angular/common';
 import {Component,OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Subject,debounceTime} from 'rxjs';
+import {SuggestionListComponent} from "./suggestionList.component";
 import {TrieService} from './trie.service';
 
 @Component({
@@ -9,9 +10,27 @@ import {TrieService} from './trie.service';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
-  ],
-  templateUrl: './autocomplete-trie-web-worker-api.component.html',
+    FormsModule,
+    SuggestionListComponent
+],
+  template: `
+    <main>
+      <h1>Autocomplete Angular: Using Trie + WW + API</h1>
+
+      <input type="text" 
+        placeholder="Enter city (Andorra, etc)" 
+        [(ngModel)]="input" 
+        (input)="onInputChange($event)"
+        (keyup.enter)="handleAddWord()" 
+      />
+
+      <button (click)="handleAddWord()">Add Word</button>
+
+      <!-- Suggestions List -->
+      <suggestion-list [suggestions]="suggestions" />
+    
+    </main>
+    `,
 })
 export class AutocompleteTrieWebWorkerApiComponent implements OnInit {
   suggestions: string[] = [];
@@ -20,7 +39,6 @@ export class AutocompleteTrieWebWorkerApiComponent implements OnInit {
   private inputSubject = new Subject<string>();
 
   constructor(private trieService: TrieService) {}
-
 
   ngOnInit(): void {
     // Initialize the trie with world cities
