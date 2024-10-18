@@ -1,4 +1,4 @@
-# Autocomplete Exercise
+# Angular Autocomplete Exercise (using Trie Data Structure)
 
 You should implement an autocomplete component (suitable for a shared component library).
 
