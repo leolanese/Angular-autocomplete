@@ -6,13 +6,14 @@ import {debounceTime,distinctUntilChanged,map,switchMap} from 'rxjs';
 import {APIService} from '../../services/api.service';
 
 @Component({
-  selector: 'autocomplete',
+  selector: 'app-autocomplete-large-dataset',
   standalone: true,
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule,
   ],
   template: `
     <div class="autocomplete-container">
+      <h2>large dataset</h2>
       <input [formControl]="searchControl" placeholder="Search ..." class="autocomplete-input">
  
       <ul *ngIf="suggestions.length" class="autocomplete-suggestions">
@@ -22,9 +23,9 @@ import {APIService} from '../../services/api.service';
       </ul>
     </div>
   `,
-  styleUrls: ['autocomplete.component.scss']
+  styleUrls: ['autocomplete-large-dataset.component.scss']
 })
-export class AutocompleteComponent implements OnInit {
+export class AutocompleteLargeDatasetComponent implements OnInit {
   private apiService = inject(APIService)
   private destroyRef = inject(DestroyRef);
   

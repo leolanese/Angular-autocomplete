@@ -1,10 +1,10 @@
 import {CommonModule} from '@angular/common';
-import {Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {Component,DestroyRef,inject,OnInit} from '@angular/core';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {FormsModule} from '@angular/forms';
-import {Subject,debounceTime} from 'rxjs';
+import {debounceTime,Subject} from 'rxjs';
 import {SuggestionListComponent} from "./suggestionList.component";
 import {TrieService} from './trie.service';
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-autocomplete-trie-web-worker-api',
@@ -16,7 +16,7 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 ],
   template: `
     <main>
-      <h1>Autocomplete Angular: Using Trie + WW + API</h1>
+      <h2>Trie Data Structure + WebWorker + API</h2>
 
       <input type="text"
         placeholder="Enter city (Andorra, etc)"

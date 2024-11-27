@@ -1,28 +1,31 @@
 import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
 
-import {AutocompleteComponent} from "./components/autocomplete/autocomplete.component";
+import {AutoCompleteSmallDatasetComponent} from "./components/autocomplete-small-dataset/autocomplete-small-dataset.component";
+import {AutocompleteLargeDatasetComponent} from "./components/autocompleteLargeDataset/autocomplete-large-dataset.component";
 import {AutocompleteTrie} from './components/autocompleteTrie/autocompleteTrie.component';
+import {AutocompleteTrieWebWorkerComponent} from "./components/autocompleteTrieWebWorker/autocomplete-trie-web-worker.component";
 import {AutocompleteTrieWebWorkerApiComponent} from './components/autocompleteTrieWebWorkerApi/autocomplete-trie-web-worker-api.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet,
+    AutoCompleteSmallDatasetComponent,
+    AutocompleteLargeDatasetComponent,
     AutocompleteTrie,
-    AutocompleteComponent,
-    AutocompleteTrieWebWorkerApiComponent
+    AutocompleteTrieWebWorkerComponent,
+    AutocompleteTrieWebWorkerApiComponent,
 ],
   template: `
     <div class="wrapper">
 
-      <!-- <autocomplete /> -->
-      <!-- <autocomplete-trie /> -->
-      <!-- <app-autocomplete-trie-web-worker /> -->
+      <app-autocomplete-small-dataset />
+      <app-autocomplete-large-dataset />
+      <app-autocomplete-trie />
+      <app-autocomplete-trie-web-worker />
       <app-autocomplete-trie-web-worker-api />
 
-      </div>
+    </div>
   `,
   styleUrl: './app.component.scss'
 })

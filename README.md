@@ -20,6 +20,9 @@ Please don't share this exercise or solution on any public profiles. Thanks!
 Node Server Running in :3000
 
 ```js
+// run server
+node .\server.js 
+
 curl http://localhost:3000/world-cities.txt
 
 http://localhost:3000/world-cities.txt

@@ -22,7 +22,9 @@ class TrieApi {
       }
       currentNode = currentNode.children[char];
     }
-    currentNode.children['*'] = true; // End of word marker
+    
+    // TODO FIXME
+    // currentNode.children['*'] = true; // End of word marker
   }
 
   search(prefix: string): TrieNodeApi | null {

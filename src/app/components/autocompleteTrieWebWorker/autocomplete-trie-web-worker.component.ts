@@ -7,10 +7,22 @@ import {TrieService} from './trie.service';
   selector: 'app-autocomplete-trie-web-worker',
   standalone: true,
   imports: [
-    CommonModule,
-    FormsModule
+    CommonModule, FormsModule
   ],
-  templateUrl: './autocomplete-trie-web-worker.component.html',
+  template: `
+    <main>
+      <h2>Trie Data Structure + WebWorker</h2>
+
+      <input type="text" placeholder="Enter a word..." [(ngModel)]="input" (input)="handleInputChange($event)"
+        (keyup.enter)="handleAddWord()" />
+
+      <button (click)="handleAddWord()">Add Word</button>
+
+      <ul>
+        <li *ngFor="let suggestion of suggestions">{{ suggestion }}</li>
+      </ul>
+    </main>
+  `,
 })
 export class AutocompleteTrieWebWorkerComponent implements OnInit {
   suggestions: string[] = [];

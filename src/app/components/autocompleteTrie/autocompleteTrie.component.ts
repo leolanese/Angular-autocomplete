@@ -4,7 +4,7 @@ import {SuggestionListComponent} from './suggestionList.component';
 import {TrieService} from './trie.service';
 
 @Component({
-  selector: 'autocomplete-trie',
+  selector: 'app-autocomplete-trie',
   standalone: true,
   imports: [
     FormsModule,
@@ -13,7 +13,7 @@ import {TrieService} from './trie.service';
   ],
   template: `
     <main>
-      <h1>Autocomplete</h1>
+      <h2>Trie Data Structure</h2>
       <input
         type="text"
         placeholder="Enter a city (Palmas, Palmares, etc)"
