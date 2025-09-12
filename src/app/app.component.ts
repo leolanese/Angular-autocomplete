@@ -6,15 +6,14 @@ import {AutocompleteTrieWebWorkerApiComponent} from "./components/autocompleteTr
 import {AutocompleteTrieWebWorkerApiSignalComponent} from "./components/autocompleteTrieWebWorkerApiSignal/autocomplete-trie-web-worker-api-signal.component";
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    AutoCompleteSmallDatasetComponent,
-    AutocompleteLargeDatasetComponent,
-    AutocompleteTrieWebWorkerApiComponent,
-    AutocompleteTrieWebWorkerApiSignalComponent,
-],
-  template: `
+    selector: 'app-root',
+    imports: [
+        AutoCompleteSmallDatasetComponent,
+        AutocompleteLargeDatasetComponent,
+        AutocompleteTrieWebWorkerApiComponent,
+        AutocompleteTrieWebWorkerApiSignalComponent,
+    ],
+    template: `
     <div class="wrapper">
 
       <app-autocomplete-small-dataset />

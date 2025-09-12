@@ -10,10 +10,9 @@ interface Item {
 }
 
 @Component({
-  selector: 'app-autocomplete-small-dataset',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  template: `
+    selector: 'app-autocomplete-small-dataset',
+    imports: [CommonModule, ReactiveFormsModule],
+    template: `
     <h2>small dataset</h2> 
     <div class="position-relative">
       <input 
@@ -40,7 +39,7 @@ interface Item {
       </div>
   </div>
   `,
-  styles: `
+    styles: `
    .dropdown-item img {
      width: 24px;
      height: 24px;

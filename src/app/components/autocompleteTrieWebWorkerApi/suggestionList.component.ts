@@ -2,10 +2,9 @@ import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy,Component,Input} from '@angular/core';
 
 @Component({
-  selector: 'suggestion-list',
-  imports: [CommonModule],
-  standalone: true,
-  template: `
+    selector: 'suggestion-list',
+    imports: [CommonModule],
+    template: `
     <ul>
       @for (suggestion of suggestions; track suggestion) {
         <li>{{ suggestion }}</li>
@@ -14,7 +13,7 @@ import {ChangeDetectionStrategy,Component,Input} from '@angular/core';
       }
     </ul>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SuggestionListComponent {
   @Input() suggestions: string[] = [];

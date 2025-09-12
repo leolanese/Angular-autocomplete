@@ -5,14 +5,13 @@ import { SuggestionListComponent } from "../autocompleteTrieWebWorkerApi/suggest
 import { TrieService } from "../autocompleteTrieWebWorkerApi/trie.service";
 
 @Component({
-  selector: 'app-autocomplete-trie-web-worker-api-signal',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    SuggestionListComponent
-  ],
-  template: `
+    selector: 'app-autocomplete-trie-web-worker-api-signal',
+    imports: [
+        CommonModule,
+        FormsModule,
+        SuggestionListComponent
+    ],
+    template: `
     <main>
       <h2>Trie Data Structure + WebWorker + API (Signals)</h2>
 
@@ -27,7 +26,7 @@ import { TrieService } from "../autocompleteTrieWebWorkerApi/trie.service";
       <!-- Suggestions List -->
       <suggestion-list [suggestions]="suggestions()" />
     </main>
-  `,
+  `
 })
 export class AutocompleteTrieWebWorkerApiSignalComponent {
   private destroyRef = inject(DestroyRef);

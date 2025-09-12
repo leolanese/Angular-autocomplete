@@ -7,14 +7,13 @@ import {SuggestionListComponent} from "./suggestionList.component";
 import {TrieService} from './trie.service';
 
 @Component({
-  selector: 'app-autocomplete-trie-web-worker-api',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    SuggestionListComponent
-],
-  template: `
+    selector: 'app-autocomplete-trie-web-worker-api',
+    imports: [
+        CommonModule,
+        FormsModule,
+        SuggestionListComponent
+    ],
+    template: `
     <main>
       <h2>Trie Data Structure + WebWorker + API</h2>
 
@@ -31,7 +30,7 @@ import {TrieService} from './trie.service';
       <suggestion-list [suggestions]="suggestions" />
 
     </main>
-    `,
+    `
 })
 export class AutocompleteTrieWebWorkerApiComponent implements OnInit {
   suggestions: string[] = [];
