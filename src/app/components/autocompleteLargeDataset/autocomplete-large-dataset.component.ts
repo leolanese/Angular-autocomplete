@@ -58,9 +58,9 @@ export class AutocompleteLargeDatasetComponent implements OnInit {
       )
     ),
     takeUntilDestroyed(this.destroyRef) // Automatically cleans up when the component is destroyed
-  ).subscribe(filteredCities => {
-    this.suggestions = filteredCities;
-  });
+    ).subscribe(filteredCities => {
+      this.suggestions = filteredCities;
+    });
   }
 
   selectSuggestion(suggestion: string): void {

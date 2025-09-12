@@ -7,9 +7,7 @@ You should implement an autocomplete component (suitable for a shared component 
 - The component should be written using Angular
 - Bonus - add meaningful unit tests for your work
 
-To demonstrate it, you should write a minimal webserver in Go or Node.js that serves up the contents of world-cities.txt as required.
-
-Please don't share this exercise or solution on any public profiles. Thanks!
+To demonstrate it, we should write a minimal webserver in Go or Node.js that serves up the contents of world-cities.txt as required.
 
 ---
 
@@ -17,11 +15,30 @@ Please don't share this exercise or solution on any public profiles. Thanks!
 
 ## Solution
 
+> Combining a Trie, a Web Worker and Angular signals is a solid, modern way to deliver snappy autocomplete on a very large list of strings. Each piece solves a different bottleneck:
+
+- Trie (algorithmic efficiency)
+O(prefix length) lookup regardless of how many total words you store.
+Stores common prefixes only once, so it scales better than an array of strings + filter.
+Natural support for prefix-based limits (first 10 matches, etc.).
+
+- Web Worker (main-thread isolation)
+Building the trie and traversing it are CPU-bound; doing them off the main thread keeps scroll/tap/animation smooth.
+Lets you work with hundreds of thousands of items without blocking change-detection.
+
+- Signals (UI reactivity)
+The component’s state (input() and suggestions()) is a pair of synchronous, garbage-free primitives — no RxJS boilerplate, no subscriptions to remember to tear down.
+Effects run only when the signal they read changes, minimising view updates.
+Fits the “derive everything, store nothing” philosophy: template simply calls suggestions().
+
+---
+
+Solution: large dataset
 Node Server Running in :3000
 
 ```js
 // run server
-node .\server.js 
+cd back-end && node .\server.js 
 
 curl http://localhost:3000/world-cities.txt
 
@@ -40,30 +57,4 @@ Angular client running :4200
 ![ut](./src/app/assets/ut.png)
 
 ---
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.3.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
 

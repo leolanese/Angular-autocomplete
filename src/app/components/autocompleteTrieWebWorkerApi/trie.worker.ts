@@ -13,6 +13,7 @@ class TrieApi {
     this.root = new TrieNodeApi();
   }
 
+  // Walks the word's characters. If a child node for a character is missing it creates one, then descends
   insert(word: string): void {
     let currentNode = this.root;
 
@@ -23,10 +24,12 @@ class TrieApi {
       currentNode = currentNode.children[char];
     }
     
-    // TODO FIXME
-    // currentNode.children['*'] = true; // End of word marker
+    // Mark the end of a word with a special child key. This allows
+    // autoComplete() to recognise complete words when traversing.
+    currentNode.children['*'] = new TrieNodeApi(); // End-of-word marker
   }
 
+  // Traverses the same way but stops early if any character path is absent, returning null
   search(prefix: string): TrieNodeApi | null {
     let currentNode = this.root;
 
@@ -37,6 +40,9 @@ class TrieApi {
     return currentNode;
   }
 
+   // autoComplete(prefix, limit)
+   // Calls search to locate the node representing the prefix.
+  // Recursively collects child paths until it has limit matches:
   autoComplete(prefix: string, limit: number = 10): string[] {
     const node = this.search(prefix);
     if (!node) return [];
@@ -50,6 +56,7 @@ class TrieApi {
     return word.charAt(0).toUpperCase() + word.slice(1);
   }
 
+  // Depth-first traversal that appends completed words (capitalised for display) until the limit is reached
   private collectAllWords(node: TrieNodeApi, word: string, results: string[], limit: number): void {
     if (results.length >= limit) return;
 

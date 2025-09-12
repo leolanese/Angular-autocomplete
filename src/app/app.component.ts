@@ -2,9 +2,8 @@ import {Component} from '@angular/core';
 
 import {AutoCompleteSmallDatasetComponent} from "./components/autocomplete-small-dataset/autocomplete-small-dataset.component";
 import {AutocompleteLargeDatasetComponent} from "./components/autocompleteLargeDataset/autocomplete-large-dataset.component";
-import {AutocompleteTrie} from './components/autocompleteTrie/autocompleteTrie.component';
-import {AutocompleteTrieWebWorkerComponent} from "./components/autocompleteTrieWebWorker/autocomplete-trie-web-worker.component";
-import {AutocompleteTrieWebWorkerApiComponent} from './components/autocompleteTrieWebWorkerApi/autocomplete-trie-web-worker-api.component';
+import {AutocompleteTrieWebWorkerApiComponent} from "./components/autocompleteTrieWebWorkerApi/autocomplete-trie-web-worker-api.component";
+import {AutocompleteTrieWebWorkerApiSignalComponent} from "./components/autocompleteTrieWebWorkerApiSignal/autocomplete-trie-web-worker-api-signal.component";
 
 @Component({
   selector: 'app-root',
@@ -12,22 +11,24 @@ import {AutocompleteTrieWebWorkerApiComponent} from './components/autocompleteTr
   imports: [
     AutoCompleteSmallDatasetComponent,
     AutocompleteLargeDatasetComponent,
-    AutocompleteTrie,
-    AutocompleteTrieWebWorkerComponent,
     AutocompleteTrieWebWorkerApiComponent,
+    AutocompleteTrieWebWorkerApiSignalComponent,
 ],
   template: `
     <div class="wrapper">
 
       <app-autocomplete-small-dataset />
       <app-autocomplete-large-dataset />
-      <app-autocomplete-trie />
-      <app-autocomplete-trie-web-worker />
+
+      <hr />
+
       <app-autocomplete-trie-web-worker-api />
+      <app-autocomplete-trie-web-worker-api-signal />
+
+      <hr />
 
     </div>
-  `,
-  styleUrl: './app.component.scss'
+  `
 })
 export class AppComponent {
   title = 'autocomplete-test';
