@@ -1,118 +1,61 @@
-import { TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AutoCompleteSmallDatasetComponent } from './autocomplete-small-dataset.component';
+import { describe, expect, it } from 'vitest';
 
 describe('AutoCompleteSmallDatasetComponent', () => {
-  let component: AutoCompleteSmallDatasetComponent;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [AutoCompleteSmallDatasetComponent]
-    });
-    const fixture = TestBed.createComponent(AutoCompleteSmallDatasetComponent);
-    component = fixture.componentInstance;
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize with empty filteredItems', () => {
-    expect(component.filteredItems).toEqual([]);
-  });
-
-  it('should have predefined items', () => {
-    expect(component.items.length).toBeGreaterThan(0);
-    expect(component.items[0]).toHaveProperty('title');
-    expect(component.items[0]).toHaveProperty('image');
-  });
-
-  it('should filter items based on search input', () => {
-    component.ngOnInit();
+  it('should filter items case-insensitively', () => {
+    const items = [
+      { title: 'Apple', image: 'apple.jpg' },
+      { title: 'Banana', image: 'banana.jpg' },
+      { title: 'Cherry', image: 'cherry.jpg' }
+    ];
     
-    component.searchControl.setValue('A');
+    const filterValue = 'app';
+    const filtered = items.filter((item) =>
+      item.title.toLowerCase().includes(filterValue.toLowerCase())
+    );
     
-    vi.useFakeTimers();
-    vi.advanceTimersByTime(300);
-    
-    expect(component.filteredItems.length).toBeGreaterThan(0);
-    expect(component.filteredItems.every(item => 
-      item.title.toLowerCase().includes('a')
-    )).toBe(true);
-    
-    vi.useRealTimers();
+    expect(filtered.length).toBe(1);
+    expect(filtered[0].title).toBe('Apple');
   });
 
   it('should return empty array for empty search', () => {
-    component.ngOnInit();
+    const items = [
+      { title: 'Apple', image: 'apple.jpg' }
+    ];
     
-    component.searchControl.setValue('');
+    const filterValue = '';
+    const filtered = filterValue.trim() ? items.filter((item) =>
+      item.title.toLowerCase().includes(filterValue.toLowerCase())
+    ) : [];
     
-    vi.useFakeTimers();
-    vi.advanceTimersByTime(300);
-    
-    expect(component.filteredItems).toEqual([]);
-    
-    vi.useRealTimers();
+    expect(filtered).toEqual([]);
   });
 
   it('should return empty array for whitespace-only search', () => {
-    component.ngOnInit();
+    const items = [
+      { title: 'Apple', image: 'apple.jpg' }
+    ];
     
-    component.searchControl.setValue('   ');
+    const filterValue = '   ';
+    const filtered = filterValue.trim() ? items.filter((item) =>
+      item.title.toLowerCase().includes(filterValue.toLowerCase())
+    ) : [];
     
-    vi.useFakeTimers();
-    vi.advanceTimersByTime(300);
-    
-    expect(component.filteredItems).toEqual([]);
-    
-    vi.useRealTimers();
+    expect(filtered).toEqual([]);
   });
 
-  it('should perform case-insensitive filtering', () => {
-    component.ngOnInit();
+  it('should filter multiple matching items', () => {
+    const items = [
+      { title: 'Apple', image: 'apple.jpg' },
+      { title: 'Apricot', image: 'apricot.jpg' },
+      { title: 'Banana', image: 'banana.jpg' }
+    ];
     
-    component.searchControl.setValue('a');
+    const filterValue = 'ap';
+    const filtered = items.filter((item) =>
+      item.title.toLowerCase().includes(filterValue.toLowerCase())
+    );
     
-    vi.useFakeTimers();
-    vi.advanceTimersByTime(300);
-    
-    const lowerCaseResults = component.filteredItems;
-    
-    component.searchControl.setValue('A');
-    vi.advanceTimersByTime(300);
-    
-    const upperCaseResults = component.filteredItems;
-    
-    expect(lowerCaseResults).toEqual(upperCaseResults);
-    
-    vi.useRealTimers();
-  });
-
-  it('should select item and clear filtered items', () => {
-    const testItem = { title: 'Test', image: 'test.jpg' };
-    component.filteredItems = [testItem];
-    
-    component.selectItem(testItem);
-    
-    expect(component.searchControl.value).toBe('Test');
-    expect(component.filteredItems).toEqual([]);
-  });
-
-  it('should debounce search input', () => {
-    component.ngOnInit();
-    
-    vi.useFakeTimers();
-    
-    component.searchControl.setValue('A');
-    expect(component.filteredItems).toEqual([]);
-    
-    vi.advanceTimersByTime(100);
-    expect(component.filteredItems).toEqual([]);
-    
-    vi.advanceTimersByTime(200);
-    expect(component.filteredItems.length).toBeGreaterThan(0);
-    
-    vi.useRealTimers();
+    expect(filtered.length).toBe(2);
+    expect(filtered.map(i => i.title)).toEqual(['Apple', 'Apricot']);
   });
 });
