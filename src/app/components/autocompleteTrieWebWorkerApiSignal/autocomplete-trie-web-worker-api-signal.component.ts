@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { of } from 'rxjs';
+import { debounceTime, switchMap } from 'rxjs/operators';
 import { SuggestionListComponent } from "../autocompleteTrieWebWorkerApi/suggestionList.component";
 import { TrieService } from "../autocompleteTrieWebWorkerApi/trie.service";
 
@@ -29,30 +32,26 @@ import { TrieService } from "../autocompleteTrieWebWorkerApi/trie.service";
   `
 })
 export class AutocompleteTrieWebWorkerApiSignalComponent {
-  private destroyRef = inject(DestroyRef);
   private trieService = inject(TrieService);
 
-  // Writable signals for template state
+  // Writable signal for input
   input = signal<string>('');
-  suggestions = signal<string[]>([]);
+
+  // Derived signal for suggestions using RxJS for async handling
+  // This automatically cancels previous requests via switchMap
+  suggestions = toSignal(
+    toObservable(this.input).pipe(
+      debounceTime(300),
+      switchMap(prefix => {
+        if (!prefix || !prefix.trim()) return of([]);
+        return this.trieService.getSuggestions(prefix);
+      })
+    ), 
+    { initialValue: [] }
+  );
 
   constructor() {
-    // Initialise trie on component creation
-    this.trieService.initializeTrie().pipe().subscribe();
-
-    // Whenever input changes, fetch suggestions
-    effect(() => {
-      const prefix = this.input();
-      if (!prefix) {
-        this.suggestions.set([]);
-        return;
-      }
-      // Fire request and dispose automatically when destroyed
-      this.trieService.getSuggestions(prefix).pipe().subscribe({
-        next: (s) => this.suggestions.set(s),
-        error: (err) => console.error('Error fetching suggestions:', err)
-      });
-    }, { allowSignalWrites: true, manualCleanup: true });
+    this.trieService.initializeTrie().subscribe();
   }
 
   handleAddWord(): void {
@@ -62,7 +61,7 @@ export class AutocompleteTrieWebWorkerApiSignalComponent {
     this.trieService.addWord(value).subscribe({
       next: () => {
         this.input.set('');
-        this.suggestions.set([]);
+        // Suggestions will automatically update to empty via the pipeline
       },
       error: (err) => console.error('Error adding word:', err)
     });

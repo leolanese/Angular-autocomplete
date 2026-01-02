@@ -1,8 +1,17 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {filter,fromEvent,map,Observable,Subject,take} from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { filter, fromEvent, map, Observable, Subject, take } from 'rxjs';
 
-interface WorkerMessage {
+interface WorkerMessageOut {
+  requestId: string;
+  action: 'initialize' | 'autocomplete' | 'addWord';
+  words?: string[];
+  prefix?: string;
+  word?: string;
+}
+
+interface WorkerMessageIn {
+  requestId?: string;
   suggestions?: string[];
   status?: string;
   error?: string;
@@ -13,7 +22,7 @@ interface WorkerMessage {
 })
 export class TrieService {
   private worker: Worker;
-  private messageSubject = new Subject<WorkerMessage>();
+  private messageSubject = new Subject<WorkerMessageIn>();
 
   constructor(private http: HttpClient) {
     if (typeof Worker !== 'undefined') {
@@ -22,19 +31,22 @@ export class TrieService {
       });
 
       fromEvent<MessageEvent>(this.worker, 'message')
-        .pipe(
-          map((event) => event.data as WorkerMessage)
-        )
+        .pipe(map((event) => event.data as WorkerMessageIn))
         .subscribe((message) => {
-          this.messageSubject.next(message);
+           this.messageSubject.next(message);
         });
-
     } else {
       throw new Error('Web Workers are not supported in this environment.');
     }
   }
 
+  private generateId(): string {
+    return Math.random().toString(36).substring(2, 9);
+  }
+
   initializeTrie(): Observable<string> {
+    const requestId = this.generateId();
+    
     return new Observable((observer) => {
       this.http
         .get('http://localhost:3000/world-cities.txt', { responseType: 'text' })
@@ -44,7 +56,8 @@ export class TrieService {
               .split('\n')
               .map((city) => city.trim())
               .filter((city) => city.length > 0);
-            this.worker.postMessage({ action: 'initialize', words });
+              
+            this.worker.postMessage({ action: 'initialize', words, requestId } as WorkerMessageOut);
           },
           error: (err) => {
             console.error('Error fetching world cities:', err);
@@ -54,37 +67,41 @@ export class TrieService {
 
       this.messageSubject
         .pipe(
-          filter((msg) => msg.status === 'initialized'),
+          filter((msg) => msg.requestId === requestId),
           take(1)
         )
         .subscribe({
-          next: () => {
-            observer.next('Trie initialized successfully.');
-            observer.complete();
+          next: (msg) => {
+            if (msg.error) observer.error(msg.error);
+            else {
+                observer.next('Trie initialized successfully.');
+                observer.complete();
+            }
           },
-          error: (err: any) => observer.error(err),
+          error: (err) => observer.error(err),
         });
     });
   }
 
   getSuggestions(prefix: string): Observable<string[]> {
-    this.worker.postMessage({ action: 'autocomplete', prefix });
+    const requestId = this.generateId();
+    this.worker.postMessage({ action: 'autocomplete', prefix, requestId } as WorkerMessageOut);
 
     return this.messageSubject.pipe(
-      filter((msg) => !!msg.suggestions),
-      map((msg) => msg.suggestions as string[]),
+      filter((msg) => msg.requestId === requestId), // Only match MY request
+      map((msg) => msg.suggestions || []),
       take(1)
     );
   }
 
   addWord(word: string): Observable<string> {
-    this.worker.postMessage({ action: 'addWord', word });
+    const requestId = this.generateId();
+    this.worker.postMessage({ action: 'addWord', word, requestId } as WorkerMessageOut);
 
     return this.messageSubject.pipe(
-      filter((msg) => msg.status === 'word_added'),
-      map((msg) => msg.status as string),
+      filter((msg) => msg.requestId === requestId),
+      map((msg) => msg.status || 'unknown'),
       take(1)
     );
   }
-
 }
