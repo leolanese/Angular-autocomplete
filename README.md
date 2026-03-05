@@ -32,7 +32,7 @@ Fits the "derive everything, store nothing" philosophy: template simply calls su
 
 ## Solution: small dataset
 
-> Node Server Running in :3000
+Node Server Running in `:3000`
 
 ```js
 // run server
@@ -43,7 +43,7 @@ curl http://localhost:3000/world-cities.txt
 http://localhost:3000/world-cities.txt
 ```
 
-Angular client running :4200
+Angular client running `:4200`
 
 ---
 
@@ -58,3 +58,4 @@ Angular client running :4200
 ##### :radio_button: Twitter: <a href="https://twitter.com/LeoLanese" target="_blank">@LeoLanese</a>
 ##### :radio_button: DEV.to: <a href="https://www.dev.to/leolanese" target="_blank">Blog</a>
 ##### :radio_button: Questions / Suggestion / Recommendation: developer@leolanese.com
+
