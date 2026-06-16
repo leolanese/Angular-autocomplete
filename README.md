@@ -48,7 +48,7 @@ Angular client running `:4200`
 ---
 
 ### :100: <i>Thanks!</i>
-#### Now, don't be an stranger. Let's stay in touch!
+#### Let's stay in touch!
 
 <a href="https://github.com/leolanese" target="_blank" rel="noopener noreferrer">
   <img src="https://scastiel.dev/api/image/leolanese?dark&removeLink" alt="leolanese’s GitHub image" width="600" height="314" />
