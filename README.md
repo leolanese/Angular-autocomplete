@@ -57,5 +57,5 @@ Angular client running `:4200`
 ##### :radio_button: linkedin: <a href="https://www.linkedin.com/in/leolanese/" target="_blank">@LeoLanese</a>
 ##### :radio_button: Twitter: <a href="https://twitter.com/LeoLanese" target="_blank">@LeoLanese</a>
 ##### :radio_button: DEV.to: <a href="https://www.dev.to/leolanese" target="_blank">Blog</a>
-##### :radio_button: Questions / Suggestion / Recommendation: developer@leolanese.com
+##### :radio_button: Questions / Suggestion / Recommendation: engineer@leolanese.com
 
